@@ -27,18 +27,16 @@ struct Webview: UIViewRepresentable {
         prefs.allowsContentJavaScript = true
         let config = WKWebViewConfiguration()
         config.defaultWebpagePreferences = prefs
-//        let chainId = ""
-//        let rpcUrl = ""
         let source =
             """
             (function() {
-                window.fcl = new fclProvider.Provider()
+                window.fclProvider = new fclProvider.Provider();
                 window.fcl.config()
                 .put("app.detail.title", "1111111")
-                .put("challenge.scope", "email") // request for Email
-                .put("accessNode.api", "https://access-testnet.onflow.org") // Flow testnet
-                .put("challenge.handshake", "https://flow-wallet-testnet.blocto.app/authn")
-            
+                .put("challenge.scope", "email")
+                .put("accessNode.api", "https://access-testnet.onflow.org")
+                .put("challenge.handshake", "https://flow-wallet-testnet.blocto.app/authn");
+
                 window.fclProvider.postMessage = (jsonString) => {
                     webkit.messageHandlers._fcl_.postMessage(jsonString)
                 };

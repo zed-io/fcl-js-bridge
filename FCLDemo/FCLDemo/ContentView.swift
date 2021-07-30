@@ -11,7 +11,7 @@ struct ContentView: View {
     var body: some View {
 //        "https://port.onflow.org"
 //        "https://fcl-demo.netlify.app"
-        Webview(url: URL(string: "http://192.168.1.104:3000")!)
+        Webview(url: URL(string: "http://127.0.0.1:3000")!)
     }
 }
 
