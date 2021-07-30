@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -14,6 +14,7 @@
 		156D3D7A26B171070067122F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 156D3D7926B171070067122F /* Assets.xcassets */; };
 		156D3D7D26B171070067122F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 156D3D7C26B171070067122F /* Preview Assets.xcassets */; };
 		156D3D8526B171220067122F /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 156D3D8426B171220067122F /* WebView.swift */; };
+		BB01DBAF26B3A2EE00874638 /* Swifter in Frameworks */ = {isa = PBXBuildFile; productRef = BB01DBAE26B3A2EE00874638 /* Swifter */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +34,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BB01DBAF26B3A2EE00874638 /* Swifter in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -95,6 +97,9 @@
 			dependencies = (
 			);
 			name = FCLDemo;
+			packageProductDependencies = (
+				BB01DBAE26B3A2EE00874638 /* Swifter */,
+			);
 			productName = FCLDemo;
 			productReference = 156D3D7226B171050067122F /* FCLDemo.app */;
 			productType = "com.apple.product-type.application";
@@ -122,6 +127,9 @@
 				Base,
 			);
 			mainGroup = 156D3D6926B171050067122F;
+			packageReferences = (
+				BB01DBAD26B3A2EE00874638 /* XCRemoteSwiftPackageReference "swifter" */,
+			);
 			productRefGroup = 156D3D7326B171050067122F /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -361,6 +369,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		BB01DBAD26B3A2EE00874638 /* XCRemoteSwiftPackageReference "swifter" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/httpswift/swifter.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.5.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		BB01DBAE26B3A2EE00874638 /* Swifter */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BB01DBAD26B3A2EE00874638 /* XCRemoteSwiftPackageReference "swifter" */;
+			productName = Swifter;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 156D3D6A26B171050067122F /* Project object */;
 }
