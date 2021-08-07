@@ -8,17 +8,21 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State var isShown = false
+
     var body: some View {
 //        "https://port.onflow.org"
 //        "https://fcl-demo.netlify.app"
         // "about:blank"
 
         ZStack {
-            Button("Auth") {}
-            Webview(url: URL(string:
-                "about:blank"
-//                "https://fcl-demo.netlify.app"
-            )!)
+            Button("Auth") {
+                JSCoreManager.shared.auth()
+                isShown.toggle()
+            }
+            if isShown {
+                Webview()
+            }
         }
     }
 }
