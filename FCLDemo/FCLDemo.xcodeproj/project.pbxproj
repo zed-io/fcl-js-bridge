@@ -3,23 +3,23 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 50;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		152EEB4526B297A800FD9E5E /* JSBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 152EEB4426B297A800FD9E5E /* JSBridge.swift */; };
-		152EEB5326B2D23500FD9E5E /* fcl-min.js in Resources */ = {isa = PBXBuildFile; fileRef = 152EEB5226B2D23500FD9E5E /* fcl-min.js */; };
+		1565FC9026BAC80000239344 /* JSCoreManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1565FC8F26BAC80000239344 /* JSCoreManager.swift */; };
 		156D3D7626B171050067122F /* FCLDemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 156D3D7526B171050067122F /* FCLDemoApp.swift */; };
 		156D3D7826B171050067122F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 156D3D7726B171050067122F /* ContentView.swift */; };
 		156D3D7A26B171070067122F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 156D3D7926B171070067122F /* Assets.xcassets */; };
 		156D3D7D26B171070067122F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 156D3D7C26B171070067122F /* Preview Assets.xcassets */; };
 		156D3D8526B171220067122F /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 156D3D8426B171220067122F /* WebView.swift */; };
-		BB01DBAF26B3A2EE00874638 /* Swifter in Frameworks */ = {isa = PBXBuildFile; productRef = BB01DBAE26B3A2EE00874638 /* Swifter */; };
+		158B66B526BE2711005C73DE /* fcl-min.js in Resources */ = {isa = PBXBuildFile; fileRef = 158B66B426BE2711005C73DE /* fcl-min.js */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		152EEB4426B297A800FD9E5E /* JSBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSBridge.swift; sourceTree = "<group>"; };
-		152EEB5226B2D23500FD9E5E /* fcl-min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "fcl-min.js"; sourceTree = "<group>"; };
+		1565FC8F26BAC80000239344 /* JSCoreManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSCoreManager.swift; sourceTree = "<group>"; };
 		156D3D7226B171050067122F /* FCLDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FCLDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		156D3D7526B171050067122F /* FCLDemoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FCLDemoApp.swift; sourceTree = "<group>"; };
 		156D3D7726B171050067122F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -27,6 +27,7 @@
 		156D3D7C26B171070067122F /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		156D3D7E26B171070067122F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		156D3D8426B171220067122F /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
+		158B66B426BE2711005C73DE /* fcl-min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = "fcl-min.js"; path = "../../../flow-js-bridge/fcl-min.js"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -34,7 +35,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BB01DBAF26B3A2EE00874638 /* Swifter in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -60,7 +60,7 @@
 		156D3D7426B171050067122F /* FCLDemo */ = {
 			isa = PBXGroup;
 			children = (
-				152EEB5226B2D23500FD9E5E /* fcl-min.js */,
+				158B66B426BE2711005C73DE /* fcl-min.js */,
 				156D3D7526B171050067122F /* FCLDemoApp.swift */,
 				156D3D7726B171050067122F /* ContentView.swift */,
 				156D3D7926B171070067122F /* Assets.xcassets */,
@@ -68,6 +68,7 @@
 				156D3D7B26B171070067122F /* Preview Content */,
 				156D3D8426B171220067122F /* WebView.swift */,
 				152EEB4426B297A800FD9E5E /* JSBridge.swift */,
+				1565FC8F26BAC80000239344 /* JSCoreManager.swift */,
 			);
 			path = FCLDemo;
 			sourceTree = "<group>";
@@ -97,9 +98,6 @@
 			dependencies = (
 			);
 			name = FCLDemo;
-			packageProductDependencies = (
-				BB01DBAE26B3A2EE00874638 /* Swifter */,
-			);
 			productName = FCLDemo;
 			productReference = 156D3D7226B171050067122F /* FCLDemo.app */;
 			productType = "com.apple.product-type.application";
@@ -127,9 +125,6 @@
 				Base,
 			);
 			mainGroup = 156D3D6926B171050067122F;
-			packageReferences = (
-				BB01DBAD26B3A2EE00874638 /* XCRemoteSwiftPackageReference "swifter" */,
-			);
 			productRefGroup = 156D3D7326B171050067122F /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -146,7 +141,7 @@
 			files = (
 				156D3D7D26B171070067122F /* Preview Assets.xcassets in Resources */,
 				156D3D7A26B171070067122F /* Assets.xcassets in Resources */,
-				152EEB5326B2D23500FD9E5E /* fcl-min.js in Resources */,
+				158B66B526BE2711005C73DE /* fcl-min.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -179,6 +174,7 @@
 			files = (
 				156D3D8526B171220067122F /* WebView.swift in Sources */,
 				156D3D7826B171050067122F /* ContentView.swift in Sources */,
+				1565FC9026BAC80000239344 /* JSCoreManager.swift in Sources */,
 				156D3D7626B171050067122F /* FCLDemoApp.swift in Sources */,
 				152EEB4526B297A800FD9E5E /* JSBridge.swift in Sources */,
 			);
@@ -369,25 +365,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		BB01DBAD26B3A2EE00874638 /* XCRemoteSwiftPackageReference "swifter" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/httpswift/swifter.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.5.0;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		BB01DBAE26B3A2EE00874638 /* Swifter */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = BB01DBAD26B3A2EE00874638 /* XCRemoteSwiftPackageReference "swifter" */;
-			productName = Swifter;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 156D3D6A26B171050067122F /* Project object */;
 }

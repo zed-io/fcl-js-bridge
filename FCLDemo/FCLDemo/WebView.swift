@@ -5,6 +5,7 @@
 //  Created by lmcmz on 28/7/21.
 //
 
+import SafariServices
 import SwiftUI
 import WebKit
 
@@ -14,12 +15,22 @@ struct Webview: UIViewRepresentable {
         let webview = WKWebView(frame: .zero, configuration: webviewConfig())
         let request = URLRequest(url: url, cachePolicy: .returnCacheDataElseLoad)
         webview.load(request)
+
         return webview
     }
 
     func updateUIView(_ webview: WKWebView, context _: UIViewRepresentableContext<Webview>) {
         let request = URLRequest(url: url, cachePolicy: .returnCacheDataElseLoad)
         webview.load(request)
+        let source =
+            """
+            window.fcl.VERSION
+            """
+
+        webview.evaluateJavaScript(source) { result, error in
+            print(result)
+            print(error)
+        }
     }
 
     private func webviewConfig() -> WKWebViewConfiguration {
@@ -27,19 +38,19 @@ struct Webview: UIViewRepresentable {
         prefs.allowsContentJavaScript = true
         let config = WKWebViewConfiguration()
         config.defaultWebpagePreferences = prefs
+//        let chainId = ""
+//        let rpcUrl = ""
         let source =
             """
             (function() {
-                window.fclProvider = new fclProvider.Provider();
                 window.fcl.config()
+                .put("env", "testnet")
+                .put("service.OpenID.scopes", "email")
+                .put("app.detail.icon", "https://placekitten.com/g/200/200")
                 .put("app.detail.title", "1111111")
-                .put("challenge.scope", "email")
-                .put("accessNode.api", "https://access-testnet.onflow.org")
-                .put("challenge.handshake", "https://flow-wallet-testnet.blocto.app/authn");
-
-                window.fclProvider.postMessage = (jsonString) => {
-                    webkit.messageHandlers._fcl_.postMessage(jsonString)
-                };
+                .put("challenge.scope", "email") // request for Email
+                .put("accessNode.api", "https://access-testnet.onflow.org") // Flow testnet
+                .put("challenge.handshake", "https://flow-wallet-testnet.blocto.app/authn")
             })();
             """
 
@@ -60,6 +71,7 @@ struct Webview: UIViewRepresentable {
         controller.addUserScript(providerScript)
         controller.add(handler, name: "_fcl_")
         config.userContentController = controller
+
         return config
     }
 }
