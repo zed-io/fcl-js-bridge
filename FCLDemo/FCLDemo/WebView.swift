@@ -22,14 +22,17 @@ struct Webview: UIViewRepresentable {
     func updateUIView(_ webview: WKWebView, context _: UIViewRepresentableContext<Webview>) {
         let request = URLRequest(url: url, cachePolicy: .returnCacheDataElseLoad)
         webview.load(request)
-        let source =
-            """
-            window.fcl.VERSION
-            """
 
-        webview.evaluateJavaScript(source) { result, error in
-            print(result)
-            print(error)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            let source =
+                """
+                fcl.reauthenticate()
+                """
+
+            webview.evaluateJavaScript(source) { result, error in
+                print(result)
+                print(error)
+            }
         }
     }
 
@@ -50,7 +53,7 @@ struct Webview: UIViewRepresentable {
                 .put("app.detail.title", "1111111")
                 .put("challenge.scope", "email") // request for Email
                 .put("accessNode.api", "https://access-testnet.onflow.org") // Flow testnet
-                .put("challenge.handshake", "https://flow-wallet-testnet.blocto.app/authn")
+                .put("discovery.wallet", "https://fcl-discovery.onflow.org/testnet/authn")
             })();
             """
 
