@@ -938,10 +938,8 @@
   resolved "https://registry.yarnpkg.com/@nodelib/fs.stat/-/fs.stat-1.1.3.tgz#2b5a3ab3f918cca48a8c754c08168e3f03eba61b"
   integrity sha512-shAmDyaQC4H92APFoIaVDHCx5bStIocgvbwQyxPRrbUY20V1EYTbSDchWbuwlMG3V17cprZhA6+78JfB+3DTPw==
 
-"@onflow/fcl@^0.0.76":
+"@onflow/fcl@file:/Users/lmcmz/flow/fcl-js-test":
   version "0.0.76"
-  resolved "https://registry.yarnpkg.com/@onflow/fcl/-/fcl-0.0.76.tgz#f62b4a1add5142bdceeb01d8691a6fa8713b32e0"
-  integrity sha512-GFD8Pk4k9A6WKoK5CEO5KVZi4b3+KiJVY41NkLG376Wm+nqWLY7XlysU+uX1n+GvoJ7m1W+4BTSKmJRVU/QWjg==
   dependencies:
     "@onflow/interaction" "0.0.11"
     "@onflow/rlp" "0.0.3"

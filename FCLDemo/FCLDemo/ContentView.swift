@@ -8,20 +8,30 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State var isShown = false
+    @ObservedObject var viewModel = ViewModel()
 
     var body: some View {
-//        "https://port.onflow.org"
-//        "https://fcl-demo.netlify.app"
-        // "about:blank"
-
         ZStack {
-            Button("Auth") {
-                JSCoreManager.shared.auth()
-                isShown.toggle()
+            VStack(alignment: .center, spacing: 20) {
+                Section {
+                    Button("Auth") {
+                        viewModel.shouldShowWebView.toggle()
+                        JSCoreManager.shared.auth()
+                    }
+
+                    Text(verbatim: viewModel.address)
+                }
+
+                Section {
+                    Button("Config") {
+                        JSCoreManager.shared.config()
+                    }
+
+                    Text(verbatim: viewModel.env)
+                }
             }
-            if isShown {
-                Webview()
+            if viewModel.shouldShowWebView {
+                Webview(viewModel: viewModel)
             }
         }
     }
