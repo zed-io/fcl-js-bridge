@@ -20,21 +20,29 @@ class FCLNativeBridge extends EventEmitter {
 
   getConfig() {
     fcl.config().all().then((info) => {
-      console.log("AAAAAAA -> getConfig", info);
       this.postMessage("getConfig", 888, info);
     })
   }
 
   currentUser() {
     fcl.currentUser().snapshot().then((userInfo) => {
-      console.log("AAAAAAA -> currentUser", userInfo);
       this.postMessage("currentUser", 888, userInfo);
+    })
+  }
+
+  getAccount(addr) {
+    console.log("AAAAAAA -> getAccount", addr);
+    fcl.send([fcl.getAccount(addr)]).then((account) => {
+      console.log("AAAAAAA -> getAccount", account);
+      fcl.decode(account).then((response) => {
+        console.log("AAAAAAA -> decode", response);
+        this.postMessage("account", 888, response)
+      })
     })
   }
 
   reauth() {
     fcl.reauthenticate().then((userInfo) => {
-      console.log("AAAAAAA -> reauthenticate", userInfo);
       this.postMessage("reauth", 888, userInfo);
     });
   }

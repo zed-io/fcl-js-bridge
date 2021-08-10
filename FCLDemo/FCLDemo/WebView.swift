@@ -12,7 +12,6 @@ import WebKit
 struct Webview: UIViewRepresentable {
     var viewModel: ViewModel
     func makeUIView(context _: UIViewRepresentableContext<Webview>) -> WKWebView {
-        JSCoreManager.shared.setViewModel(viewModel: viewModel)
         return JSCoreManager.shared.webview
     }
 

@@ -10,13 +10,15 @@ import Swifter
 import WebKit
 
 protocol JSBridgeDelegate {
-    func showMessage()
+    func showAddress(address: String)
+    func showEnv(env: String)
+    func showBalance(balance: String)
+    func getSelectedIndex() -> Int
+    func getSelectedNodeIndex() -> Int
     func hideWebView()
 }
 
 class JSCoreManager: NSObject {
-    private var viewModel: ViewModel?
-
     static let shared = JSCoreManager()
 
     var delegate: JSBridgeDelegate?
@@ -37,17 +39,25 @@ class JSCoreManager: NSObject {
         prefs.allowsContentJavaScript = true
         let config = WKWebViewConfiguration()
         config.defaultWebpagePreferences = prefs
+
+        let index = delegate?.getSelectedIndex()
+        let array = ["https://fcl-discovery.onflow.org/testnet/authn", "https://flow-wallet-testnet.blocto.app/authn"]
+
+        let nodeIndex = delegate?.getSelectedNodeIndex()
+        let node = ["https://access-testnet.onflow.org", "https://flow-access-mainnet.portto.io"]
+        let nodeEnv = ["testnet", "mainnet"]
+
         let source =
             """
             (function() {
                 window.fcl.config()
-                .put("env", "testnet")
+                .put("env", "\(nodeEnv[nodeIndex!])")
                 .put("service.OpenID.scopes", "email")
                 .put("app.detail.icon", "https://placekitten.com/g/200/200")
                 .put("app.detail.title", "1111111")
                 .put("challenge.scope", "email") // request for Email
-                .put("accessNode.api", "https://access-testnet.onflow.org") // Flow testnet
-                .put("discovery.wallet", "https://fcl-discovery.onflow.org/testnet/authn");
+                .put("accessNode.api", "\(node[nodeIndex!])") // Flow testnet
+                .put("discovery.wallet", "\(array[index!])");
             
                 window.fclbridge = new fclnative.Bridge();
                 fclnative.postMessage = (jsonString) => {
@@ -85,14 +95,14 @@ class JSCoreManager: NSObject {
         try! server.start()
     }
 
-    func setViewModel(viewModel: ViewModel) {
-        self.viewModel = viewModel
-    }
-
     func auth() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             self.webview.evaluateJavaScript("fclbridge.reauth()")
         }
+    }
+
+    func getAccount(address: String) {
+        webview.evaluateJavaScript("fclbridge.getAccount(\"\(address)\")")
     }
 
     func config() {
@@ -109,7 +119,7 @@ extension JSCoreManager: WKNavigationDelegate {
 extension JSCoreManager: WKScriptMessageHandler {
     func userContentController(_: WKUserContentController, didReceive message: WKScriptMessage) {
         print(message.json)
-        viewModel?.hideWebView()
+        delegate?.hideWebView()
 
         let json = message.json
 
@@ -123,14 +133,19 @@ extension JSCoreManager: WKScriptMessageHandler {
                 let addr = object["addr"] as? String else {
                 return
             }
-            viewModel?.showAddress(address: addr)
+            delegate?.showAddress(address: addr)
         case "getConfig":
             guard let object = json["object"] as? AnyObject,
-                let env = object["env"] as? String else {
+                let env = object["accessNode.api"] as? String else {
                 return
             }
-
-            viewModel?.showEnv(env: env)
+            delegate?.showEnv(env: env)
+        case "account":
+            guard let object = json["object"] as? AnyObject,
+                let balance = object["balance"] as? Int64 else {
+                return
+            }
+            delegate?.showBalance(balance: String(balance))
         default:
             return
         }
