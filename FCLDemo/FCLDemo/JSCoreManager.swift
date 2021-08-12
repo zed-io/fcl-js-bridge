@@ -27,9 +27,8 @@ class JSCoreManager: NSObject {
 
     lazy var webview: WKWebView = {
         let webview = WKWebView(frame: .zero, configuration: webviewConfig)
-        let url = URL(string: "http://127.0.0.1:8080")!
-        let request = URLRequest(url: url, cachePolicy: .returnCacheDataElseLoad)
-        webview.load(request)
+        let url = Bundle.main.url(forResource: "index", withExtension: "html")!
+        webview.loadFileURL(url, allowingReadAccessTo: url)
         webview.navigationDelegate = self
         return webview
     }()
@@ -39,6 +38,7 @@ class JSCoreManager: NSObject {
         prefs.allowsContentJavaScript = true
         let config = WKWebViewConfiguration()
         config.defaultWebpagePreferences = prefs
+        config.setValue(true, forKey: "_allowUniversalAccessFromFileURLs")
 
         let index = delegate?.getSelectedIndex()
         let array = ["https://fcl-discovery.onflow.org/testnet/authn", "https://flow-wallet-testnet.blocto.app/authn"]
@@ -85,18 +85,10 @@ class JSCoreManager: NSObject {
         return config
     }()
 
-    override init() {
-        let url = Bundle.main.path(forResource: "index", ofType: "html")!
-        let source = try! String(contentsOfFile: url)
-        server = HttpServer()
-        server["/"] = { _ in
-            HttpResponse.ok(.text(source))
-        }
-        try! server.start()
-    }
+    override init() {}
 
     func auth() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
             self.webview.evaluateJavaScript("fclbridge.reauth()")
         }
     }
