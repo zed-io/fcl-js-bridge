@@ -13,6 +13,7 @@ protocol JSBridgeDelegate {
     func showEnv(env: String)
     func showBalance(balance: String)
     func hideWebView()
+    func showScriptOne(result: String)
 }
 
 class JSCoreManager: NSObject {
@@ -83,6 +84,10 @@ class JSCoreManager: NSObject {
         webview.evaluateJavaScript("fclbridge.getConfig()")
     }
 
+    func scriptOne() {
+        webview.evaluateJavaScript("fclbridge.scriptOne()")
+    }
+
     func setConifg() {
         webview.allowsLinkPreview = true
     }
@@ -134,9 +139,13 @@ extension JSCoreManager: WKScriptMessageHandler {
     func userContentController(_: WKUserContentController, didReceive message: WKScriptMessage) {
         delegate?.hideWebView()
 
+        print(message.json)
+
         guard let response = extractMethod(message: message) else {
             return
         }
+
+        let json = message.json
 
         switch response.name {
         case Flow.BridgeMethod.getConfig.rawValue:
@@ -146,19 +155,23 @@ extension JSCoreManager: WKScriptMessageHandler {
             let object = model.object
             delegate?.showEnv(env: object.accessNode)
         case Flow.BridgeMethod.reauth.rawValue:
-            let json = message.json
             guard let object = json["object"] as? AnyObject,
                 let addr = object["addr"] as? String else {
                 return
             }
             delegate?.showAddress(address: addr)
         case Flow.BridgeMethod.account.rawValue:
-            let json = message.json
             guard let object = json["object"] as? AnyObject,
                 let balance = object["balance"] as? Int64 else {
                 return
             }
             delegate?.showBalance(balance: String(balance))
+
+        case Flow.BridgeMethod.scriptOne.rawValue:
+            guard let result = json["object"] as? Int else {
+                return
+            }
+            delegate?.showScriptOne(result: String(result))
         default:
             return
         }

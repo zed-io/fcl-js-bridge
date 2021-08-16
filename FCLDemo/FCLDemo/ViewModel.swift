@@ -19,7 +19,10 @@ class ViewModel: ObservableObject, JSBridgeDelegate {
     @Published var env = ""
 
     @Published var searchAddress = "0x5d2cd5bf303468fa"
+
     @Published var searchAddressBalance = "0"
+
+    @Published var scriptOneResult = ""
 
     func showAddress(address: String) {
         self.address = address
@@ -46,5 +49,7 @@ class ViewModel: ObservableObject, JSBridgeDelegate {
         JSCoreManager.shared.changeWallet(wallet: walletNode)
     }
 
-    init() {}
+    func showScriptOne(result: String) {
+        scriptOneResult = result
+    }
 }

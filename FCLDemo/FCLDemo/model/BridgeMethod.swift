@@ -23,5 +23,6 @@ extension Flow {
         case reauth
         case getConfig
         case account
+        case scriptOne
     }
 }

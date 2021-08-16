@@ -90,7 +90,7 @@ class FCLNativeBridge extends EventEmitter {
     ])
 
     const result = await fcl.decode(response)
-    console.log("AAAA --> scriptOne", result)
+    this.postMessage("scriptOne", 888, result)
   }
 
   /**
