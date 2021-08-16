@@ -12,6 +12,7 @@ struct ContentView: View {
 
     init() {
         JSCoreManager.shared.delegate = viewModel
+        JSCoreManager.shared.setConifg()
     }
 
     var body: some View {

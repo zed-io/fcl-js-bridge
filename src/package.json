@@ -10,7 +10,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@onflow/fcl": "^0.0.76",
+    "@onflow/fcl": "file:/Users/lmcmz/flow/fcl-js-test",
     "@onflow/types": "^0.0.5",
     "buffer": "^5.6.0",
     "events": "^3.2.0",

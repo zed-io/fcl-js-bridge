@@ -10,9 +10,9 @@ import Foundation
 class ViewModel: ObservableObject, JSBridgeDelegate {
     @Published var shouldShowWebView = false
 
-    @Published var selectedIndex = 0
+    @Published var selectedIndex = 1
 
-    @Published var selectedNodeIndex = 0
+    @Published var selectedNodeIndex = 1
 
     @Published var address = ""
 
