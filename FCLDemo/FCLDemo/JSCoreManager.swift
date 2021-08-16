@@ -20,7 +20,7 @@ class JSCoreManager: NSObject {
 
     var delegate: JSBridgeDelegate?
 
-    var isDebug = false
+    var isDebug = true
 
     var defaultWallet: Flow.WalletNode = Flow.WalletNode.blcoto
 
@@ -132,29 +132,28 @@ extension JSCoreManager: WKNavigationDelegate {
 
 extension JSCoreManager: WKScriptMessageHandler {
     func userContentController(_: WKUserContentController, didReceive message: WKScriptMessage) {
-        print(message.json)
         delegate?.hideWebView()
 
-        let json = message.json
-
-        guard let name = json["name"] as? String else {
+        guard let response = extractMethod(message: message) else {
             return
         }
 
-        switch name {
-        case "reauth":
+        switch response.name {
+        case Flow.BridgeMethod.getConfig.rawValue:
+            guard let model: Flow.ResponseModel<Flow.Config> = extractObject(message: message) else {
+                return
+            }
+            let object = model.object
+            delegate?.showEnv(env: object.accessNode)
+        case Flow.BridgeMethod.reauth.rawValue:
+            let json = message.json
             guard let object = json["object"] as? AnyObject,
                 let addr = object["addr"] as? String else {
                 return
             }
             delegate?.showAddress(address: addr)
-        case "getConfig":
-            guard let object = json["object"] as? AnyObject,
-                let env = object["accessNode.api"] as? String else {
-                return
-            }
-            delegate?.showEnv(env: env)
-        case "account":
+        case Flow.BridgeMethod.account.rawValue:
+            let json = message.json
             guard let object = json["object"] as? AnyObject,
                 let balance = object["balance"] as? Int64 else {
                 return
@@ -163,6 +162,34 @@ extension JSCoreManager: WKScriptMessageHandler {
         default:
             return
         }
+    }
+
+    private func extractMethod(message: WKScriptMessage) -> Flow.ResponseMethod? {
+        let decoder = JSONDecoder()
+        if let string = message.body as? String,
+            let data = string.data(using: .utf8),
+            let model = try? decoder.decode(Flow.ResponseMethod.self, from: data) {
+            return model
+        } else if let object = message.body as? [String: Any],
+            let data = try? JSONSerialization.data(withJSONObject: object, options: []),
+            let model = try? decoder.decode(Flow.ResponseMethod.self, from: data) {
+            return model
+        }
+        return nil
+    }
+
+    private func extractObject<T>(message: WKScriptMessage) -> Flow.ResponseModel<T>? {
+        let decoder = JSONDecoder()
+        if let string = message.body as? String,
+            let data = string.data(using: .utf8),
+            let model = try? decoder.decode(Flow.ResponseModel<T>.self, from: data) {
+            return model
+        } else if let object = message.body as? [String: Any],
+            let data = try? JSONSerialization.data(withJSONObject: object, options: []),
+            let model = try? decoder.decode(Flow.ResponseModel<T>.self, from: data) {
+            return model
+        }
+        return nil
     }
 }
 
