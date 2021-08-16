@@ -15,30 +15,82 @@ class FCLNativeBridge extends EventEmitter {
     this.isDebug = true;
   }
 
-  getConfig() {
-    fcl.config().all().then((info) => {
-      this.postMessage("getConfig", 888, info);
-    })
+  getConfig = async () => {
+    const info = await fcl.config().all()
+    this.postMessage("getConfig", 888, info);
   }
 
-  currentUser() {
-    fcl.currentUser().snapshot().then((userInfo) => {
-      this.postMessage("currentUser", 888, userInfo);
-    })
+  currentUser = async () => {
+    const userInfo = await fcl.currentUser().snapshot()
+    this.postMessage("currentUser", 888, userInfo);
   }
 
-  getAccount(addr) {
-    fcl.send([fcl.getAccount(addr)]).then((account) => {
-      fcl.decode(account).then((response) => {
-        this.postMessage("account", 888, response)
-      })
-    })
+  getAccount = async (addr) => {
+    const account = await fcl.send([fcl.getAccount(addr)])
+    const response = await fcl.decode(account)
+    this.postMessage("account", 888, response)
   }
 
-  reauth() {
-    fcl.reauthenticate().then((userInfo) => {
-      this.postMessage("reauth", 888, userInfo);
-    });
+  reauth = async () => {
+    const userInfo = await fcl.authenticate()
+    this.postMessage("reauth", 888, userInfo);
+  }
+
+  sendTransaction = async () => {
+    const simpleTransaction = `\
+    transaction {
+      execute {
+        log("A transaction happened")
+      }
+    }
+    `
+
+    console.log("AAAA --> sendTransaction");
+    const isSealed = true;
+    const blockResponse = await fcl.send([
+      fcl.getBlock(isSealed),
+    ])
+
+    console.log("AAAA --> blockResponse", blockResponse);
+
+    const block = await fcl.decode(blockResponse)
+
+    console.log("AAAA -->", block);
+
+    try {
+      const { transactionId } = await fcl.send([
+        fcl.transaction(simpleTransaction),
+        fcl.proposer(fcl.currentUser().authorization),
+        fcl.payer(fcl.currentUser().authorization),
+        fcl.ref(block.id),
+      ])
+
+      const unsub = fcl
+        .tx({ transactionId })
+        .subscribe(transaction => {
+          this.postMessage(transaction)
+          if (fcl.tx.isSealed(transaction)) {
+            unsub()
+          }
+        })
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  scriptOne = async () => {
+
+    const scriptOne = `\
+    pub fun main(): Int {
+      return 42 + 6
+    }
+    `
+    const response = await fcl.send([
+      fcl.script(scriptOne),
+    ])
+
+    const result = await fcl.decode(response)
+    console.log("AAAA --> scriptOne", result)
   }
 
   /**
@@ -51,7 +103,7 @@ class FCLNativeBridge extends EventEmitter {
       object: data,
     };
     if (window.fclnative.postMessage) {
-      webkit.messageHandlers._fcl_.postMessage(jsonString)
+      fclnative.postMessage(object)
     } else {
       // old clients
       window.webkit.messageHandlers[name].postMessage(object);

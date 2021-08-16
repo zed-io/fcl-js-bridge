@@ -10,9 +10,9 @@ import Foundation
 class ViewModel: ObservableObject, JSBridgeDelegate {
     @Published var shouldShowWebView = false
 
-    @Published var selectedIndex = 1
+    @Published var walletNode: Flow.WalletNode = JSCoreManager.shared.defaultWallet
 
-    @Published var selectedNodeIndex = 1
+    @Published var chainId: Flow.ChainId = JSCoreManager.shared.defaultChainId
 
     @Published var address = ""
 
@@ -25,14 +25,6 @@ class ViewModel: ObservableObject, JSBridgeDelegate {
         self.address = address
     }
 
-    func getSelectedIndex() -> Int {
-        return selectedIndex
-    }
-
-    func getSelectedNodeIndex() -> Int {
-        return selectedNodeIndex
-    }
-
     func showEnv(env: String) {
         self.env = env
     }
@@ -43,6 +35,15 @@ class ViewModel: ObservableObject, JSBridgeDelegate {
 
     func showBalance(balance: String) {
         searchAddressBalance = balance
+    }
+
+    func changeWallet() {
+        JSCoreManager.shared.changeWallet(wallet: walletNode)
+    }
+
+    func changeChain() {
+        JSCoreManager.shared.changeNode(chainID: chainId)
+        JSCoreManager.shared.changeWallet(wallet: walletNode)
     }
 
     init() {}

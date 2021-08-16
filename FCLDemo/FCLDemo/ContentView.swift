@@ -44,19 +44,25 @@ struct ContentView: View {
                     Text(verbatim: viewModel.env)
                 }
 
-                Picker("iFrame", selection: $viewModel.selectedIndex, content: {
-                    Text("Flow").tag(0)
-                    Text("Blocoto").tag(1)
-                })
-                    .pickerStyle(SegmentedPickerStyle())
-                    .padding()
+                HStack {
+                    Picker("iFrame", selection: $viewModel.walletNode, content: {
+                        Text("Flow").tag(Flow.WalletNode.flow)
+                        Text("Blocoto").tag(Flow.WalletNode.blcoto)
+                    }).onChange(of: viewModel.walletNode, perform: { _ in
+                        viewModel.changeWallet()
+                    })
+                        .pickerStyle(SegmentedPickerStyle())
+                        .padding()
 
-                Picker("Node", selection: $viewModel.selectedNodeIndex, content: {
-                    Text("Testnet").tag(0)
-                    Text("Mainnet").tag(1)
-                })
-                    .pickerStyle(SegmentedPickerStyle())
-                    .padding()
+                    Picker("Node", selection: $viewModel.chainId, content: {
+                        Text("Testnet").tag(Flow.ChainId.testnet)
+                        Text("Mainnet").tag(Flow.ChainId.mainnet)
+                    }).onChange(of: viewModel.chainId, perform: { _ in
+                        viewModel.changeChain()
+                    })
+                        .pickerStyle(SegmentedPickerStyle())
+                        .padding()
+                }
             }
 
             if viewModel.shouldShowWebView {

@@ -6,15 +6,12 @@
 //
 
 import Foundation
-import Swifter
 import WebKit
 
 protocol JSBridgeDelegate {
     func showAddress(address: String)
     func showEnv(env: String)
     func showBalance(balance: String)
-    func getSelectedIndex() -> Int
-    func getSelectedNodeIndex() -> Int
     func hideWebView()
 }
 
@@ -23,9 +20,27 @@ class JSCoreManager: NSObject {
 
     var delegate: JSBridgeDelegate?
 
-    var server: HttpServer!
+    var isDebug = false
 
-    var isDebug = true
+    var defaultWallet: Flow.WalletNode = Flow.WalletNode.blcoto
+
+    var defaultChainId: Flow.ChainId = Flow.ChainId.mainnet
+
+    let walletURL: [Flow.ChainId: [Flow.WalletNode: String]] = [
+        .testnet: [
+            .blcoto: "https://flow-wallet-testnet.blocto.app/authn",
+            .flow: "https://fcl-discovery.onflow.org/testnet/authn",
+        ],
+        .mainnet: [
+            .blcoto: "https://flow-wallet.blocto.app/authn",
+            .flow: "https://fcl-discovery.onflow.org/authn",
+        ],
+    ]
+
+    let nodeURL: [Flow.ChainId: String] = [
+        .testnet: "https://access-testnet.onflow.org",
+        .mainnet: "https://flow-access-mainnet.portto.io",
+    ]
 
     lazy var webview: WKWebView = {
         let webview = WKWebView(frame: .zero, configuration: webviewConfig)
@@ -42,12 +57,6 @@ class JSCoreManager: NSObject {
         let config = WKWebViewConfiguration()
         config.defaultWebpagePreferences = prefs
 
-//        let index = delegate?.getSelectedIndex()
-//        let array = ["https://fcl-discovery.onflow.org/testnet/authn", "https://flow-wallet-testnet.blocto.app/authn"]
-//        let nodeIndex = delegate?.getSelectedNodeIndex()
-//        let node = ["https://access-testnet.onflow.org", "https://flow-access-mainnet.portto.io"]
-//        let nodeEnv = ["testnet", "mainnet"]
-
         let controller = WKUserContentController()
 
         if isDebug {
@@ -61,8 +70,6 @@ class JSCoreManager: NSObject {
         config.userContentController = controller
         return config
     }()
-
-    override init() {}
 
     func auth() {
         webview.evaluateJavaScript("fclbridge.reauth()")
@@ -79,20 +86,45 @@ class JSCoreManager: NSObject {
     func setConifg() {
         webview.allowsLinkPreview = true
     }
+
+    func changeNode(chainID: Flow.ChainId) {
+        defaultChainId = chainID
+        let nodeURL = nodeURL[chainID]
+        webview.evaluateJavaScript(
+            """
+            window.fcl.config()
+                .put("env", \"\(defaultChainId.rawValue)\")
+                .put("accessNode.api", \"\(nodeURL!)\");
+            """
+        )
+    }
+
+    func changeWallet(wallet: Flow.WalletNode) {
+        defaultWallet = wallet
+        let walletURL = walletURL[defaultChainId]![wallet]
+        webview.evaluateJavaScript(
+            """
+            window.fcl.config()
+                .put("discovery.wallet", \"\(walletURL!)\");
+            """
+        )
+    }
 }
 
 extension JSCoreManager: WKNavigationDelegate {
     func webView(_: WKWebView, didFinish _: WKNavigation!) {
+        let wallet = walletURL[defaultChainId]![defaultWallet]
+        let node = nodeURL[defaultChainId]
         webview.evaluateJavaScript(
             """
             window.fcl.config()
-                .put("env", "testnet")
+                .put("env", \"\(defaultChainId.rawValue)\")
                 .put("service.OpenID.scopes", "email")
                 .put("app.detail.icon", "https://placekitten.com/g/200/200")
                 .put("app.detail.title", "fcl js bridge demo")
                 .put("challenge.scope", "email") // request for Email
-                .put("accessNode.api", "https://access-testnet.onflow.org")
-                .put("discovery.wallet", "https://flow-wallet-testnet.blocto.app/authn");
+                .put("accessNode.api", \"\(node!)\")
+                .put("discovery.wallet", \"\(wallet!)\");
             """
         )
     }
