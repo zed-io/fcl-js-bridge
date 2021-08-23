@@ -21,7 +21,6 @@ struct ContentView: View {
                 Form {
                     Section {
                         Button("Auth") {
-                            viewModel.shouldShowWebView.toggle()
                             JSCoreManager.shared.auth()
                         }
 
@@ -59,10 +58,10 @@ struct ContentView: View {
 
                     Section {
                         Button("Send Transation") {
-                            JSCoreManager.shared.config()
+                            JSCoreManager.shared.sendTransaction()
                         }
 
-                        Text(verbatim: viewModel.env)
+//                        Text(verbatim: viewModel.env)
                     }
 
                     HStack {

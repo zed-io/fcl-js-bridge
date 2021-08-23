@@ -5,7 +5,6 @@ window.fcl = fcl;
 window.addEventListener("message", d => {
   console.log("Message Received", d.data);
 });
-
 class FCLNativeBridge extends EventEmitter {
 
   constructor() {
@@ -13,6 +12,14 @@ class FCLNativeBridge extends EventEmitter {
     this.callbacks = new Map();
     this.isFCLNative = true;
     this.isDebug = true;
+  }
+
+  show() {
+    this.postMessage("show", 888, {});
+  }
+
+  hide() {
+    this.postMessage("hide", 888, {});
   }
 
   getConfig = async () => {
@@ -45,17 +52,12 @@ class FCLNativeBridge extends EventEmitter {
     }
     `
 
-    console.log("AAAA --> sendTransaction");
     const isSealed = true;
     const blockResponse = await fcl.send([
       fcl.getBlock(isSealed),
     ])
 
-    console.log("AAAA --> blockResponse", blockResponse);
-
     const block = await fcl.decode(blockResponse)
-
-    console.log("AAAA -->", block);
 
     try {
       const { transactionId } = await fcl.send([
@@ -120,3 +122,21 @@ window.fclbridge = new fclnative.Bridge();
 fclnative.postMessage = (jsonString) => {
   webkit.messageHandlers._fcl_.postMessage(jsonString)
 };
+
+var targetNode = document.body;
+var observer = new MutationObserver(function () {
+  var shouldShow = false;
+  for (var key of targetNode.childNodes.values()) {
+    if (key.nodeName === 'IFRAME' && key.id === 'FCL_IFRAME') {
+      shouldShow = true;
+    }
+  }
+  if (shouldShow) {
+    window.fclbridge.show();
+  } else {
+    window.fclbridge.hide();
+  }
+});
+
+const config = { childList: true };
+observer.observe(targetNode, config);

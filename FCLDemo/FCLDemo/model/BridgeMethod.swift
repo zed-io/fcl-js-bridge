@@ -24,5 +24,7 @@ extension Flow {
         case getConfig
         case account
         case scriptOne
+        case show
+        case hide
     }
 }

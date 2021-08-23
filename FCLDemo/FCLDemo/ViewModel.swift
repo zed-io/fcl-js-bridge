@@ -36,6 +36,10 @@ class ViewModel: ObservableObject, JSBridgeDelegate {
         shouldShowWebView = false
     }
 
+    func showWebView() {
+        shouldShowWebView = true
+    }
+
     func showBalance(balance: String) {
         searchAddressBalance = balance
     }
